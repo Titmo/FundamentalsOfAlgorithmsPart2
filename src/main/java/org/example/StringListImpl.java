@@ -8,19 +8,19 @@ import org.example.exception.NullItemException;
 import java.util.Arrays;
 
 public class StringListImpl implements StringList {
-    private final String[] array;
+    private final Integer[] array;
     private int size;
 
     public StringListImpl() {
-        array = new String[10];
+        array = new Integer[10];
     }
 
     public StringListImpl(int sizeArray) {
-        array = new String[sizeArray];
+        array = new Integer[sizeArray];
     }
 
     @Override
-    public String add(String item) {
+    public Integer add(Integer item) {
         checkItem(item);
         checkSize();
         array[size++] = item;
@@ -28,7 +28,7 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public String add(int index, String item) {
+    public Integer add(int index, Integer item) {
         checkItem(item);
         checkSize();
         checkIndex(index);
@@ -42,7 +42,7 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public String set(int index, String item) {
+    public Integer set(int index, Integer item) {
         checkIndex(index);
         checkItem(item);
 
@@ -51,7 +51,7 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public String remove(String item) {
+    public Integer remove(Integer item) {
         checkItem(item);
         int index = indexOf(item);
 
@@ -65,27 +65,14 @@ public class StringListImpl implements StringList {
         return item;
     }
 
-    @Override
-    public String remove(int index) {
-        checkIndex(index);
-
-        String item = array[index];
-
-        if (index != size) {
-            System.arraycopy(array, index + 1, array, index, size - index);
-        }
-        size--;
-        return null;
-    }
-
 
     @Override
-    public boolean contains(String item) {
+    public boolean contains(Integer item) {
         return indexOf(item) != -1;
     }
 
     @Override
-    public int indexOf(String item) {
+    public int indexOf(Integer item) {
         for (int i = 0; i < size; i++) {
             if (array[i].equals(item)) {
                 return i;
@@ -95,7 +82,7 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public int lastIndexOf(String item) {
+    public int lastIndexOf(Integer item) {
         for (int i = size - 1; i >= 0; i--) {
             if (array[i].equals(item)) {
                 return i;
@@ -105,7 +92,7 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public String get(int index) {
+    public Integer get(int index) {
         checkIndex(index);
         return array[index];
     }
@@ -131,11 +118,46 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public String[] toArray() {
+    public Integer[] toArray() {
         return Arrays.copyOf(array, size);
     }
 
-    private void checkItem(String item) {
+    public void sort() {
+        for (int i = size - 1; i >= 0; i--) {
+            int max = Integer.MIN_VALUE;
+            int idMax = 0;
+            for (int j = 0; j <= i; j++) {
+                if (max < get(j)) {
+                    max = get(j);
+                    idMax = j;
+                }
+            }
+            int itemI = get(i);
+            set(i,max);
+            set(idMax,itemI);
+        }
+    }
+
+    public int containsBin(Integer item) {
+        int index =-1;
+        int low = 0;
+        int high = size;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (array[mid] < item) {
+                low = mid + 1;
+            } else if (array[mid] > item) {
+                high = mid - 1;
+            } else if (array[mid] == item) {
+                index = mid;
+                break;
+            }
+        }
+        return index+1;
+    }
+
+
+    private void checkItem(Integer item) {
         if (item == null) {
             throw new NullItemException();
         }
